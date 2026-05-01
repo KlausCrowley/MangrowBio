@@ -1,12 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -15,6 +13,8 @@ model User {
   email         String   @unique
   password_hash String
   created_at    DateTime @default(now())
+
+  @@index([created_at])
 }
 
 model Contact {
@@ -28,21 +28,21 @@ model Contact {
   created_at       DateTime @default(now())
 
   @@index([email])
-  @@index([status, created_at(sort: Desc)])
+  @@index([status, created_at])
 }
 
 model CaseStudy {
   id         String   @id @default(uuid())
   title      String
-  industry   String
+  industry   String?
   challenge  String
   solution   String
   results    String
-  metrics    String
+  metrics    String?
   created_at DateTime @default(now())
 
-  @@index([industry, created_at(sort: Desc)])
-  @@index([created_at(sort: Desc)])
+  @@index([industry])
+  @@index([created_at])
 }
 
 model BlogPost {
@@ -50,11 +50,11 @@ model BlogPost {
   title          String
   slug           String   @unique
   content        String
-  category       String
-  author         String
+  category       String?
+  author         String?
   featured_image String?
   created_at     DateTime @default(now())
 
-  @@index([category, created_at(sort: Desc)])
-  @@index([created_at(sort: Desc)])
+  @@index([category])
+  @@index([created_at])
 }
